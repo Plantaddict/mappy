@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  seller       Seller?
+}
+
+model Seller {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug            String   @unique
+  name            String
+  tagline         String   @default("")
+  logoUrl         String   @default("")
+  primaryColor    String   @default("#111111")
+  accentColor     String   @default("#c9a227")
+  allowedThemes   String   @default("[]")
+  allowedProducts String   @default("[]")
+  showPrices      Boolean  @default(false)
+  prices          String   @default("{}")
+  webhookUrl      String   @default("")
+  apiKey          String   @unique
+  plan            String   @default("starter")
+  customDomain    String   @default("")
+  createdAt       DateTime @default(now())
+  designs         Design[]
+}
+
+model Design {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  sellerId      String?
+  seller        Seller?  @relation(fields: [sellerId], references: [id], onDelete: SetNull)
+  spec          String
+  productId     String
+  themeId       String
+  title         String   @default("")
+  width         Int
+  height        Int
+  previewPath   String   @default("")
+  filePath      String   @default("")
+  customerName  String   @default("")
+  customerEmail String   @default("")
+  customerNote  String   @default("")
+  status        String   @default("approved")
+  webhookStatus String   @default("")
+  createdAt     DateTime @default(now())
+
+  @@index([sellerId, createdAt])
+}
