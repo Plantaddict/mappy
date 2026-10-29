@@ -113,37 +113,53 @@ Per-render cost on self-hosted OSM tiles is estimated well under €0.05, so gro
 
 ---
 
-## 7. Validation plan (before writing product code)
+## 7. Validation plan (stealth mode)
 
-Goal: decide go / no-go in **4 weeks** for under €500.
+**Decision (2026-10-29):** no customer interviews and no public landing-page test before the product exists, to avoid signalling the bulk-catalogue wedge to competitors. Trade-off accepted: the first real demand signal arrives after the Studio MVP is built (roughly 6–10 weeks later than with interviews), so the pre-build phase leans on research that asks nobody anything.
+
+Note for the record: the parties able to copy this (Customily, Teeinblue, Printify) will see the product at launch regardless; sellers are customers, not competitors. The protection stealth buys is a head start on execution, not secrecy of the idea. Design quality and speed of iteration are the moat.
+
+### Phase A: silent research (2–3 weeks, in parallel with engine work)
+
+| # | Test | Method | What it decides |
+|---|---|---|---|
+| A1 | Job A vs Job B | Pull the top ~200 map-poster listings (Etsy search + a seller analytics tool). Classify: per-city catalogue vs personalised; digital vs POD; price band; review velocity as a sales proxy | Which job the MVP serves first; expected price points |
+| A2 | Pain is real | Mine existing threads in r/EtsySellers, r/printondemand, Etsy community forums and POD Facebook groups for: map poster workflow, personalisation workload, Customily/Teeinblue/Printify complaints. Read only; post nothing | Whether sellers already describe the pain we assume, in their own words |
+| A3 | Manual work exists | Order a personalised map from 4 shops. Record turnaround time (days of delay = manual rendering), file/print quality, how personalisation was collected | Confirms per-order manual work and its quality ceiling |
+| A4 | Competitor quality | Buy a map print produced through Customily and one through Teeinblue; measure real resolution, design quality, and seller setup burden (trial accounts) | Confirms or kills the "generic design, weak at print size" hypothesis |
+| A5 | Platform feasibility | Apply for Etsy Personal then Commercial API access (describe the app neutrally as a "listing and order design tool"); confirm Printify / Printful / Gelato order-file APIs; read Shopify app review rules | Whether Layer 2 has a viable route; longest lead item |
+| A6 | Unit cost | Render benchmark: A2 @ 300 DPI from self-hosted OSM tiles; seconds and € per render | < €0.05 and < 30 s per render on commodity hardware |
+
+**Proceed to build if:** A1 shows a substantial catalogue segment (≥ 30% of top listings are per-city, non-personalised) *or* A3 shows manual per-order work in ≥ 3 of 4 shops; and A6 passes.
+
+### Phase B: validate with the product (after Studio MVP)
 
 | # | Test | Method | Pass criterion |
 |---|---|---|---|
-| V1 | Sellers feel the pain | 10 interviews with map-art shops (contact via Etsy messages, r/EtsySellers, POD Facebook groups). Ask: how do you make posters today, time per listing / per order, tools and what you pay, what would you pay to automate it | ≥ 6/10 describe manual per-listing or per-order work ≥ 15 min, and ≥ 4/10 say they'd pay ≥ $19/mo |
-| V2 | Demand signal | Landing page: "Generate 50 city posters in your style in 10 minutes." Waitlist + a $19 pre-order option. Promote in 3 seller communities and 1 POD YouTuber sponsorship/mention | ≥ 150 waitlist sign-ups or ≥ 15 pre-orders |
-| V3 | Competitor quality | Buy a personalised map print set up through Customily and Teeinblue; measure actual print resolution and design quality | Confirms or kills the "weak at print size / generic design" hypothesis |
-| V4 | Platform feasibility | Apply for Etsy Personal then Commercial API access now; confirm Printify/Printful order-file APIs; read Shopify app review rules | Commercial access granted or a clear path; fulfilment APIs confirmed |
-| V5 | Unit cost | Render benchmark: A2 @ 300 DPI from self-hosted OSM tiles; measure seconds and € per render | < €0.05 and < 30 s per render on commodity hardware |
+| B1 | Closed beta | Invite 5–10 map-art sellers (found in A1) to "early access" under a short NDA. Give free Pro for 2 months. Watch usage, not opinions | ≥ 5 generate a real batch; ≥ 3 publish listings made with it |
+| B2 | Willingness to pay | At the end of the beta, convert to paid Starter/Pro | ≥ 40% convert |
+| B3 | Public soft launch | The consumer poster site launches publicly as an ordinary poster tool. The Studio stays invite-only until B1/B2 pass | Consumer site provides SEO/demo traffic; the wedge stays quiet |
 
-**Kill criteria:** V1 and V2 both fail, or V4 shows no viable Etsy route *and* V1 shows most pain is in per-order work rather than catalogue work.
+**Kill criteria:** Phase A shows neither a catalogue segment nor manual per-order work, or B1 fails with fewer than 3 sellers publishing anything.
 
 ---
 
-## 8. If validation passes: MVP scope (Layer 1)
+## 8. Build plan under stealth
 
-- Web studio: place search, 6 themes, text block, sizes, live preview (reuses everything in the consumer PRD §6).
-- Batch: list of places × themes × sizes → ZIP (PNG 300 DPI, PDF) + mockups + listing CSV.
-- Accounts, Stripe billing, render quota.
-- Free tier: watermarked low-res preview and 5 free full renders to prove quality.
-- The consumer poster site becomes the public demo and SEO funnel, with a "Sell these? Use the Studio" call to action.
+Because validation moves after the build, the build is sequenced so that the first shippable piece is the one needed under every scenario.
 
-Out of scope for MVP: order automation, API, star/route maps.
+1. **Engine** (needed for every direction, including the consumer site): OSM tile source, themes, typography and layout, 300 DPI PNG/PDF export, render benchmark (A6).
+2. **Consumer site** (public, looks like one more poster tool): reuses the consumer PRD; serves as demo, SEO funnel and a stress test of the engine.
+3. **Studio MVP** (invite-only): batch rendering from a place list × themes × sizes → ZIP + mockups + listing CSV; accounts; Stripe; render quota.
+4. **Closed beta** (B1/B2), then decide on Layer 2 (order automation) based on A5 and what beta sellers actually do.
+
+Out of scope until after the beta: order automation, API, star/route maps.
 
 ---
 
 ## 9. Decision requested
 
-1. Approve the 4-week validation plan (§7).
+1. ~~Approve the 4-week validation plan.~~ Decided: stealth mode; interviews and the public landing-page test are dropped in favour of §7 Phase A/B.
 2. Agree that the consumer PRD is re-scoped to "public demo + funnel" rather than the business.
 3. Apply for Etsy API access immediately, since it is the longest lead item.
 
